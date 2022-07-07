@@ -1,5 +1,6 @@
 import { useTimer } from "react-timer-hook";
 import {
+  RiPauseFill,
   RiPlayFill,
   RiRepeatFill,
   RiSkipForwardFill,
@@ -9,6 +10,7 @@ import { useState } from "react";
 
 export function ReactTimer({ expiryTimestamp }: any) {
   const [expired, setExpired] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
   const {
     seconds,
@@ -49,18 +51,47 @@ export function ReactTimer({ expiryTimestamp }: any) {
 
       {!isRunning ? (
         <div className="timer-buttons">
-          <button onClick={start} title="Iniciar">
-            {<RiPlayFill /> /* Iniciar */}
-          </button>
-          <button onClick={resume} title="Continuar">
+          {!isPaused && (
+            <button onClick={start} title="Iniciar">
+              {<RiPlayFill /> /* Iniciar */}
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              setIsPaused(false);
+              resume();
+            }}
+            title="Continuar"
+          >
             <RiSkipForwardFill />
             {/* Continuar */}
           </button>
         </div>
       ) : (
         <div className="timer-buttons">
-          <button onClick={pause} title="Pausar">
+          <button
+            onClick={() => {
+              const time = new Date();
+              time.setSeconds(time.getSeconds() + 600);
+              setIsPaused(false);
+              restart(time);
+              restart(time);
+              pause();
+            }}
+            title="Parar"
+          >
             <RiStopFill />
+            {/* Pausar */}
+          </button>
+          <button
+            onClick={() => {
+              setIsPaused(true);
+              pause();
+            }}
+            title="Pausar"
+          >
+            <RiPauseFill />
             {/* Pausar */}
           </button>
           <button
