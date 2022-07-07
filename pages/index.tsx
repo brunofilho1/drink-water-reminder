@@ -3,8 +3,12 @@ import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "../styles/Home.module.css";
+import { ReactTimer } from "./components/ReactTimer";
 
 const Home: NextPage = () => {
+  const time = new Date();
+  time.setSeconds(time.getSeconds() + 600); // 10 minutes timer
+
   return (
     <div className={styles.container}>
       <Head>
@@ -20,10 +24,8 @@ const Home: NextPage = () => {
 
         <p className={styles.description}>Never forget to drink water again.</p>
 
-        <div className={styles.grid}>
-          <a href="/" className={styles.card}>
-            <h2>Iniciar</h2>
-          </a>
+        <div className="waterTimer">
+          <ReactTimer expiryTimestamp={time} />
         </div>
       </main>
 
