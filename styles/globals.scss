@@ -7,6 +7,7 @@
 :root {
   --white: #ffffff;
 
+  --gray-50: rgb(247, 247, 247);
   --gray-100: #eaeaea;
   --gray-300: #a8a8b3;
   --gray-900: #121214;
@@ -15,6 +16,28 @@
   --blue-300: #509bf1;
   --blue-500: #0070f3;
   --yellow-500: #eba417;
+}
+
+body {
+  background: var(--white);
+  color: var(--gray-900);
+  font: 400 1rem "Roboto", sans-serif;
+}
+
+body,
+input,
+textarea,
+select,
+button {
+}
+
+button {
+  cursor: pointer;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 @media (max-width: 1080px) {
@@ -27,28 +50,4 @@
   html {
     font-size: 87.5%; // 0.875 * 16px = 14px;
   }
-}
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-  background: var(--white);
-  color: var(--gray-900);
-}
-
-body,
-input,
-textarea,
-select,
-button {
-  font: 400 1rem "Roboto", sans-serif;
-}
-
-button {
-  cursor: pointer;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
 }

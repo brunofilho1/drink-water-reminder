@@ -11,6 +11,7 @@ import { useState } from "react";
 export function ReactTimer({ expiryTimestamp }: any) {
   const [expired, setExpired] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
+  const [isStoped, setIsStoped] = useState(false);
 
   const {
     seconds,
@@ -52,21 +53,28 @@ export function ReactTimer({ expiryTimestamp }: any) {
       {!isRunning ? (
         <div className="timer-buttons">
           {!isPaused && (
-            <button onClick={start} title="Iniciar">
+            <button
+              onClick={() => {
+                setIsStoped(false);
+                start();
+              }}
+              title="Iniciar"
+            >
               {<RiPlayFill /> /* Iniciar */}
             </button>
           )}
 
-          <button
-            onClick={() => {
-              setIsPaused(false);
-              resume();
-            }}
-            title="Continuar"
-          >
-            <RiSkipForwardFill />
-            {/* Continuar */}
-          </button>
+          {!isStoped && (
+            <button
+              onClick={() => {
+                setIsPaused(false);
+                resume();
+              }}
+              title="Continuar"
+            >
+              <RiSkipForwardFill />
+            </button>
+          )}
         </div>
       ) : (
         <div className="timer-buttons">
@@ -76,13 +84,12 @@ export function ReactTimer({ expiryTimestamp }: any) {
               time.setSeconds(time.getSeconds() + 600);
               setIsPaused(false);
               restart(time);
-              restart(time);
+              setIsStoped(true);
               pause();
             }}
             title="Parar"
           >
             <RiStopFill />
-            {/* Pausar */}
           </button>
           <button
             onClick={() => {
@@ -92,7 +99,6 @@ export function ReactTimer({ expiryTimestamp }: any) {
             title="Pausar"
           >
             <RiPauseFill />
-            {/* Pausar */}
           </button>
           <button
             title="Reiniciar"
@@ -103,7 +109,6 @@ export function ReactTimer({ expiryTimestamp }: any) {
             }}
           >
             <RiRepeatFill />
-            {/* Reiniciar */}
           </button>
         </div>
       )}
