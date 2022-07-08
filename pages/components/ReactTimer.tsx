@@ -9,9 +9,10 @@ import {
 import { useEffect, useRef, useState } from "react";
 
 export function ReactTimer({ expiryTimestamp }: any) {
-  const [expired, setExpired] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isStoped, setIsStoped] = useState(false);
+  const [audioUrl, setAudioUrl] = useState("");
+  const [timerTime, setTimerTime] = useState<number>(5);
   const audioRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const {
@@ -28,8 +29,12 @@ export function ReactTimer({ expiryTimestamp }: any) {
     autoStart: false,
     expiryTimestamp,
     onExpire: () => {
-      setExpired(true);
-      console.warn("onExpire called");
+      const time = new Date();
+      time.setSeconds(time.getSeconds() + timerTime);
+      restart(time);
+      console.warn("HORA DE BEBER ÁGUA");
+      setAudioUrl("/sounds/alarm.mp3");
+      toggleSound();
     },
   });
 
@@ -51,6 +56,12 @@ export function ReactTimer({ expiryTimestamp }: any) {
     setIsPlaying(!isPlaying);
   }
 
+  function restartFunc() {
+    const time = new Date();
+    time.setSeconds(time.getSeconds() + timerTime);
+    restart(time);
+  }
+
   useEffect(() => {
     if (!audioRef.current) {
       return;
@@ -68,7 +79,7 @@ export function ReactTimer({ expiryTimestamp }: any) {
   return (
     <div className="react-timer-container">
       <audio
-        src={"/sounds/click.mp3"}
+        src={audioUrl}
         autoPlay={true}
         ref={audioRef}
         onPlay={() => setPlayingState(true)}
@@ -86,10 +97,9 @@ export function ReactTimer({ expiryTimestamp }: any) {
           {!isPaused && (
             <button
               onClick={() => {
-                const time = new Date();
-                time.setSeconds(time.getSeconds() + 600);
-                restart(time);
+                restartFunc();
                 setIsStoped(false);
+                setAudioUrl("/sounds/click.mp3");
                 toggleSound();
               }}
               title="Iniciar"
@@ -98,29 +108,41 @@ export function ReactTimer({ expiryTimestamp }: any) {
             </button>
           )}
 
-          {!isStoped && (
-            <button
-              onClick={() => {
-                setIsPaused(false);
-                toggleSound();
-                resume();
-              }}
-              title="Continuar"
-            >
-              <RiSkipForwardFill />
-            </button>
+          {isPaused && (
+            <>
+              <button
+                onClick={() => {
+                  setIsPaused(false);
+                  setAudioUrl("/sounds/click.mp3");
+                  toggleSound();
+                  resume();
+                }}
+                title="Continuar"
+              >
+                <RiSkipForwardFill />
+              </button>
+              <button
+                title="Reiniciar"
+                onClick={() => {
+                  setAudioUrl("/sounds/click.mp3");
+                  toggleSound();
+                  restartFunc();
+                }}
+              >
+                <RiRepeatFill />
+              </button>
+            </>
           )}
         </div>
       ) : (
         <div className="timer-buttons">
           <button
             onClick={() => {
-              const time = new Date();
-              time.setSeconds(time.getSeconds() + 600);
               setIsPaused(false);
-              restart(time);
+              restartFunc();
               pause();
               setIsStoped(true);
+              setAudioUrl("/sounds/click.mp3");
               toggleSound();
             }}
             title="Parar"
@@ -130,6 +152,7 @@ export function ReactTimer({ expiryTimestamp }: any) {
           <button
             onClick={() => {
               setIsPaused(true);
+              setAudioUrl("/sounds/click.mp3");
               toggleSound();
               pause();
             }}
@@ -140,10 +163,9 @@ export function ReactTimer({ expiryTimestamp }: any) {
           <button
             title="Reiniciar"
             onClick={() => {
-              const time = new Date();
-              time.setSeconds(time.getSeconds() + 600);
+              setAudioUrl("/sounds/click.mp3");
               toggleSound();
-              restart(time);
+              restartFunc();
             }}
           >
             <RiRepeatFill />
