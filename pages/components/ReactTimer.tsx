@@ -6,13 +6,14 @@ import {
   RiSkipForwardFill,
   RiStopFill,
 } from "react-icons/ri";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export function ReactTimer({ expiryTimestamp }: any) {
   const [expired, setExpired] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
   const [isStoped, setIsStoped] = useState(false);
-
+  const audioRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(false);
   const {
     seconds,
     minutes,
@@ -24,6 +25,7 @@ export function ReactTimer({ expiryTimestamp }: any) {
     resume,
     restart,
   } = useTimer({
+    autoStart: false,
     expiryTimestamp,
     onExpire: () => {
       setExpired(true);
@@ -42,8 +44,37 @@ export function ReactTimer({ expiryTimestamp }: any) {
     return newTime;
   };
 
+  function setPlayingState(state: any) {
+    setIsPlaying(state);
+  }
+  function toggleSound() {
+    setIsPlaying(!isPlaying);
+  }
+
+  useEffect(() => {
+    if (!audioRef.current) {
+      return;
+    }
+
+    if (isPlaying) {
+      // @ts-ignore
+      audioRef.current.play();
+    } else {
+      // @ts-ignore
+      audioRef.current.pause();
+    }
+  }, [isPlaying]);
+
   return (
     <div className="react-timer-container">
+      <audio
+        src={"/sounds/click.mp3"}
+        autoPlay={true}
+        ref={audioRef}
+        onPlay={() => setPlayingState(true)}
+        onPause={() => setPlayingState(false)}
+      />
+
       <div className="react-timer-clock">
         <span>{returnTime(hours) + hours}</span>:
         <span>{returnTime(minutes) + minutes}</span>:
@@ -55,8 +86,11 @@ export function ReactTimer({ expiryTimestamp }: any) {
           {!isPaused && (
             <button
               onClick={() => {
+                const time = new Date();
+                time.setSeconds(time.getSeconds() + 600);
+                restart(time);
                 setIsStoped(false);
-                start();
+                toggleSound();
               }}
               title="Iniciar"
             >
@@ -68,6 +102,7 @@ export function ReactTimer({ expiryTimestamp }: any) {
             <button
               onClick={() => {
                 setIsPaused(false);
+                toggleSound();
                 resume();
               }}
               title="Continuar"
@@ -84,8 +119,9 @@ export function ReactTimer({ expiryTimestamp }: any) {
               time.setSeconds(time.getSeconds() + 600);
               setIsPaused(false);
               restart(time);
-              setIsStoped(true);
               pause();
+              setIsStoped(true);
+              toggleSound();
             }}
             title="Parar"
           >
@@ -94,6 +130,7 @@ export function ReactTimer({ expiryTimestamp }: any) {
           <button
             onClick={() => {
               setIsPaused(true);
+              toggleSound();
               pause();
             }}
             title="Pausar"
@@ -105,6 +142,7 @@ export function ReactTimer({ expiryTimestamp }: any) {
             onClick={() => {
               const time = new Date();
               time.setSeconds(time.getSeconds() + 600);
+              toggleSound();
               restart(time);
             }}
           >

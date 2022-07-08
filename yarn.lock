@@ -178,6 +178,13 @@
   dependencies:
     "@types/react" "*"
 
+"@types/react-sound@^1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@types/react-sound/-/react-sound-1.2.3.tgz#9ce13ed6b553e0027d5657d8f1816f98e0e30ef5"
+  integrity sha512-PfeO57BIvocJe5Gwj/EicTu1XTYuliXBNzz8Uj9qm3LglnqP+X0zb2FUKZUIVISZ8L/e8PrCjciAix2ZsdKhzw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*", "@types/react@18.0.14":
   version "18.0.14"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.14.tgz#e016616ffff51dba01b04945610fe3671fdbe06d"
