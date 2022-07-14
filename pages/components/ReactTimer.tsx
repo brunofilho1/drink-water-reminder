@@ -7,10 +7,10 @@ import {
   RiStopFill,
 } from "react-icons/ri";
 import { useEffect, useRef, useState } from "react";
+import { NextSeo } from "next-seo";
 
 export function ReactTimer({ expiryTimestamp }: any) {
   const [isPaused, setIsPaused] = useState(false);
-  const [isStoped, setIsStoped] = useState(false);
   const [audioUrl, setAudioUrl] = useState("");
   const [timerTime, setTimerTime] = useState<number>(5);
   const audioRef = useRef(null);
@@ -35,6 +35,16 @@ export function ReactTimer({ expiryTimestamp }: any) {
       console.warn("HORA DE BEBER ÁGUA");
       setAudioUrl("/sounds/alarm.mp3");
       toggleSound();
+
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission().then(function (permission) {
+          console.log(permission);
+        });
+      }
+      new Notification("Drink Water Reminder", {
+        body: "HORA DE BEBER ÁGUA!",
+        icon: "/logo.png",
+      });
     },
   });
 
@@ -78,6 +88,16 @@ export function ReactTimer({ expiryTimestamp }: any) {
 
   return (
     <div className="react-timer-container">
+      {isRunning ? (
+        <NextSeo
+          title={`${returnTime(minutes) + minutes}:${
+            returnTime(seconds) + seconds
+          } - Drink Water Reminder!`}
+        />
+      ) : (
+        <NextSeo title={`Drink Water Reminder!`} />
+      )}
+
       <audio
         src={audioUrl}
         autoPlay={true}
@@ -98,7 +118,6 @@ export function ReactTimer({ expiryTimestamp }: any) {
             <button
               onClick={() => {
                 restartFunc();
-                setIsStoped(false);
                 setAudioUrl("/sounds/click.mp3");
                 toggleSound();
               }}
@@ -141,7 +160,6 @@ export function ReactTimer({ expiryTimestamp }: any) {
               setIsPaused(false);
               restartFunc();
               pause();
-              setIsStoped(true);
               setAudioUrl("/sounds/click.mp3");
               toggleSound();
             }}
