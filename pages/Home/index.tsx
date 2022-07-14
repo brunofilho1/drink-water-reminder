@@ -1,12 +1,17 @@
+import { useEffect } from "react";
+import usePersistedState from "../../hooks/usePersistedState";
 import { ReactTimer } from "../components/ReactTimer";
 
 export default function HomeScreen() {
+  const [userTimer, setUserTimer] = usePersistedState("userTimer", 500);
   const time = new Date();
-  time.setSeconds(time.getSeconds() + 5); // 10 minutes timer
+  time.setSeconds(time.getSeconds() + 300);
 
-  Notification.requestPermission().then(function (permission) {
-    console.log(permission);
-  });
+  useEffect(() => {
+    Notification.requestPermission().then(function (permission) {
+      console.log(permission);
+    });
+  }, []);
 
   return (
     <>

@@ -3,6 +3,8 @@ import {
   RiPauseFill,
   RiPlayFill,
   RiRepeatFill,
+  RiSettings3Fill,
+  RiSettings4Fill,
   RiSkipForwardFill,
   RiStopFill,
 } from "react-icons/ri";
@@ -32,7 +34,6 @@ export function ReactTimer({ expiryTimestamp }: any) {
       const time = new Date();
       time.setSeconds(time.getSeconds() + timerTime);
       restart(time);
-      console.warn("HORA DE BEBER ÁGUA");
       setAudioUrl("/sounds/alarm.mp3");
       toggleSound();
 
@@ -41,10 +42,15 @@ export function ReactTimer({ expiryTimestamp }: any) {
           console.log(permission);
         });
       }
-      new Notification("Drink Water Reminder", {
+      const alertNotification = new Notification("Drink Water Reminder", {
         body: "HORA DE BEBER ÁGUA!",
         icon: "/logo.png",
       });
+
+      alertNotification.onclick = () => {
+        window.parent.focus();
+        restartFunc();
+      };
     },
   });
 
@@ -115,16 +121,21 @@ export function ReactTimer({ expiryTimestamp }: any) {
       {!isRunning ? (
         <div className="timer-buttons">
           {!isPaused && (
-            <button
-              onClick={() => {
-                restartFunc();
-                setAudioUrl("/sounds/click.mp3");
-                toggleSound();
-              }}
-              title="Iniciar"
-            >
-              {<RiPlayFill /> /* Iniciar */}
-            </button>
+            <>
+              <button
+                onClick={() => {
+                  restartFunc();
+                  setAudioUrl("/sounds/click.mp3");
+                  toggleSound();
+                }}
+                title="Iniciar"
+              >
+                {<RiPlayFill />}
+              </button>
+              <button onClick={() => {}} title="Configurações">
+                {<RiSettings3Fill />}
+              </button>
+            </>
           )}
 
           {isPaused && (
